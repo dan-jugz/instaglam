@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'insta',
+    'users.apps.UsersConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
