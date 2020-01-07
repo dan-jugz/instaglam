@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 from .models import Post 
 from .forms import PostForm
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView,RedirectView
 
 # Create your views here.
 class PostListView(ListView):
@@ -76,3 +76,4 @@ class PostLikeToggle(RedirectView):
             else:
                 obj.likes.add(user) 
         return url_
+
