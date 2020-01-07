@@ -1,0 +1,1 @@
+web: gunicorn instaclam.wsgi --log-file -
