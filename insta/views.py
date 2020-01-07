@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 from .models import Post 
 from .forms import PostForm
-from django.views.generic import ListView,DetailView,CreateView,UpdateView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 
 # Create your views here.
 class PostListView(ListView):
@@ -51,3 +51,14 @@ class PostUpdateView(UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user 
         return super().form_valid(form)
+
+
+class PostDeleteView(DeleteView):
+    template_name = 'insta/delete.html'
+
+    def get_object(self):
+        id_=self.kwargs.get("id")
+        return get_object_or_404(Post, id=id_)
+
+    def get_success_url(self):
+        return reverse('insta:post_list')
