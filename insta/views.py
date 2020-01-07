@@ -62,3 +62,17 @@ class PostDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('insta:post_list')
+
+
+class PostLikeToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        id_ = self.kwargs.get("id")
+        obj = get_object_or_404(Post, id=id_)
+        url_ = obj.get_absolute_url()
+        user = self.request.user 
+        if user.is_authenticated:
+            if user in obj.likes.all():
+                obj.likes.remove(user)
+            else:
+                obj.likes.add(user) 
+        return url_
