@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 from .models import Post 
 from .forms import PostForm
-from django.views.generic import ListView,DetailView,CreateView
+from django.views.generic import ListView,DetailView,CreateView,UpdateView
 
 # Create your views here.
 class PostListView(ListView):
@@ -40,3 +40,14 @@ class PostCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+class PostUpdateView(UpdateView):
+    template_name = 'insta/create.html'
+    form_class = PostForm 
+
+    def get_object(self):
+        id_ = self.kwargs.get("id")
+        return get_object_or_404(Post, id=id_)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user 
+        return super().form_valid(form)
