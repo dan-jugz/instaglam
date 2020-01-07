@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib.auth.models import User 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm 
+from django.views.generic import DetailView
 
 # Create your views here.
 
@@ -23,4 +24,27 @@ def register(request):
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
+
+class Profile(DetailView):
+    template_name = 'users/profile.html'
+    queryset = User.objects.all()
+    success_url = '/'
+
+    def get_object(self):
+        id_ = self.kwargs.get("username")
+        user = get_object_or_404(User, username=id_)
+        return user 
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super(Profile,self).get_context_data(*args, **kwargs)
+        
+        user = self.get_object()
+        context.update({
+            'posts' : user.posts.all().filter(created_date__lte=timezone.now()).order_by('-created_date')
+        })
+        return context 
+
+    def add_follow(self, request):
+        user = self.get_object() 
+        user.profile.followed_by.add(request.user.profile) 
 
